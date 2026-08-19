@@ -38,7 +38,15 @@ def parse_date(value):
         if value > 1e11:
             value = value / 1000
         return datetime.fromtimestamp(value, tz=timezone.utc).date()
-    for fmt in ("%Y-%m-%d", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%dT%H:%M:%SZ", "%d-%m-%Y", "%d/%m/%Y"):
+    for fmt in (
+        "%Y-%m-%d",
+        "%Y-%m-%dT%H:%M:%S",
+        "%Y-%m-%dT%H:%M:%SZ",
+        "%d-%m-%Y",
+        "%d/%m/%Y",
+        "%d/%m/%Y %H:%M:%S",
+        "%m/%d/%Y %H:%M:%S",
+    ):
         try:
             return datetime.strptime(value, fmt).date()
         except ValueError:
