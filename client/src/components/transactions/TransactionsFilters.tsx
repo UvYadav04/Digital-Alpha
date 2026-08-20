@@ -3,6 +3,7 @@ import { DateRangeFilter } from "@/components/transactions/DateRangeFilter";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Select } from "@/components/ui/Select";
+import { dedupeCaseInsensitive } from "@/lib/collections";
 import { useFilterOptions } from "@/lib/hooks/useFilterOptions";
 import { DEFAULT_TRANSACTION_FILTERS, TransactionFilters } from "@/lib/transactionFilters";
 
@@ -21,6 +22,8 @@ export function TransactionsFilters({
   onChange: (patch: Partial<TransactionFilters>) => void;
 }) {
   const { data: options } = useFilterOptions();
+  const categories = options ? dedupeCaseInsensitive(options.categories) : [];
+  const statuses = options ? dedupeCaseInsensitive(options.statuses) : [];
 
   return (
     <div className="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-surface p-3">
@@ -34,7 +37,7 @@ export function TransactionsFilters({
 
       <Select value={filters.category} onChange={(e) => onChange({ category: e.target.value })}>
         <option value="">All categories</option>
-        {options?.categories.map((category) => (
+        {categories.map((category) => (
           <option key={category} value={category}>
             {category}
           </option>
@@ -43,7 +46,7 @@ export function TransactionsFilters({
 
       <Select value={filters.status} onChange={(e) => onChange({ status: e.target.value })}>
         <option value="">All statuses</option>
-        {options?.statuses.map((status) => (
+        {statuses.map((status) => (
           <option key={status} value={status}>
             {status}
           </option>
