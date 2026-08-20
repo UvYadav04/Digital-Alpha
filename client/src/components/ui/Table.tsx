@@ -1,13 +1,23 @@
 export function Table({ children }: { children: React.ReactNode }) {
   return (
-    <div className="w-full rounded-lg border border-border">
-      <table className="w-full border-collapse text-sm">{children}</table>
+    <div className="w-full overflow-x-auto rounded-lg border border-border md:overflow-visible">
+      <table className="w-full min-w-[640px] border-collapse text-xs sm:text-sm md:min-w-0">{children}</table>
     </div>
   );
 }
 
-export function TableHead({ children }: { children: React.ReactNode }) {
-  return <thead className="sticky top-[60px] z-10 bg-surface-muted">{children}</thead>;
+export function TableHead({
+  children,
+  stickyOffset = 60,
+}: {
+  children: React.ReactNode;
+  stickyOffset?: number;
+}) {
+  return (
+    <thead className="sticky z-10 bg-surface-muted" style={{ top: stickyOffset }}>
+      {children}
+    </thead>
+  );
 }
 
 export function TableBody({ children }: { children: React.ReactNode }) {
@@ -43,7 +53,7 @@ export function TableHeaderCell({
   const alignClass = align === "left" ? "text-left" : align === "right" ? "text-right" : "text-center";
   return (
     <th
-      className={`border-b-2 border-border px-4 py-3 font-semibold text-foreground/70 [&:not(:last-child)]:border-r [&:not(:last-child)]:border-border ${alignClass} ${className}`}
+      className={`border-b-2 border-border px-2 py-2 font-semibold text-foreground/70 sm:px-4 sm:py-3 [&:not(:last-child)]:border-r [&:not(:last-child)]:border-border ${alignClass} ${className}`}
     >
       {children}
     </th>
@@ -62,7 +72,7 @@ export function TableCell({
   const alignClass = align === "left" ? "text-left" : align === "right" ? "text-right" : "text-center";
   return (
     <td
-      className={`px-4 py-2.5 [&:not(:last-child)]:border-r [&:not(:last-child)]:border-border ${alignClass} ${className}`}
+      className={`px-2 py-2 sm:px-4 sm:py-2.5 [&:not(:last-child)]:border-r [&:not(:last-child)]:border-border ${alignClass} ${className}`}
     >
       {children}
     </td>

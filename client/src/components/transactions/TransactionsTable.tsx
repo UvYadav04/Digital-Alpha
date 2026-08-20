@@ -1,6 +1,11 @@
+"use client";
+
+import { useState } from "react";
+
 import { Transaction } from "@/api/transactions";
 import { Badge, BadgeTone } from "@/components/ui/Badge";
 import { Table, TableBody, TableCell, TableHead, TableHeaderCell, TableRow } from "@/components/ui/Table";
+import { TransactionDetailModal } from "@/components/transactions/TransactionDetailModal";
 
 function statusTone(status: string): BadgeTone {
   const normalized = status.toLowerCase();
@@ -10,7 +15,15 @@ function statusTone(status: string): BadgeTone {
   return "neutral";
 }
 
-export function TransactionsTable({ rows }: { rows: Transaction[] }) {
+export function TransactionsTable({
+  rows,
+  stickyOffset,
+}: {
+  rows: Transaction[];
+  stickyOffset?: number;
+}) {
+  const [selected, setSelected] = useState<Transaction | null>(null);
+
   if (rows.length === 0) {
     return (
       <div className="flex flex-1 items-center justify-center text-sm text-foreground/40">
@@ -20,29 +33,33 @@ export function TransactionsTable({ rows }: { rows: Transaction[] }) {
   }
 
   return (
-    <Table>
-      <TableHead>
-        <TableRow>
-          <TableHeaderCell>Merchant</TableHeaderCell>
-          <TableHeaderCell>Category</TableHeaderCell>
-          <TableHeaderCell>Status</TableHeaderCell>
-          <TableHeaderCell>Amount (₹)</TableHeaderCell>
-          <TableHeaderCell>Date</TableHeaderCell>
-        </TableRow>
-      </TableHead>
-      <TableBody>
-        {rows.map((txn) => (
-          <TableRow key={txn.id}>
-            <TableCell>{txn.merchant}</TableCell>
-            <TableCell className="text-foreground/60">{txn.category}</TableCell>
-            <TableCell>
-              <Badge tone={statusTone(txn.status)}>{txn.status}</Badge>
-            </TableCell>
-            <TableCell>{txn.amount.toLocaleString()}</TableCell>
-            <TableCell className="text-foreground/50">{txn.date}</TableCell>
+    <>
+      <Table>
+        <TableHead stickyOffset={stickyOffset}>
+          <TableRow>
+            <TableHeaderCell>Merchant</TableHeaderCell>
+            <TableHeaderCell>Category</TableHeaderCell>
+            <TableHeaderCell>Status</TableHeaderCell>
+            <TableHeaderCell>Amount (₹)</TableHeaderCell>
+            <TableHeaderCell>Date</TableHeaderCell>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHead>
+        <TableBody>
+          {rows.map((txn) => (
+            <TableRow key={txn.id} onClick={() => setSelected(txn)}>
+              <TableCell>{txn.merchant}</TableCell>
+              <TableCell className="text-foreground/60">{txn.category}</TableCell>
+              <TableCell>
+                <Badge tone={statusTone(txn.status)}>{txn.status}</Badge>
+              </TableCell>
+              <TableCell>{txn.amount.toLocaleString()}</TableCell>
+              <TableCell className="text-foreground/50">{txn.date}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+
+      <TransactionDetailModal transaction={selected} onClose={() => setSelected(null)} />
+    </>
   );
 }

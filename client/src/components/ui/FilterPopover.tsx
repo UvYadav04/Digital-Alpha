@@ -24,7 +24,7 @@ export function FilterPopover({
         {label}
       </Button>
       {isOpen && (
-        <div className="absolute left-0 z-20 mt-2 rounded-lg border border-border bg-surface p-3 shadow-lg">
+        <div className="absolute left-0 z-20 mt-2 max-w-[calc(100vw-2rem)] overflow-x-auto rounded-lg border border-border bg-surface p-3 shadow-lg">
           {children(() => setIsOpen(false))}
         </div>
       )}

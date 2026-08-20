@@ -3,6 +3,7 @@
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 import { CategorySummary } from "@/api/transactions";
+import { useViewport } from "@/lib/hooks/useViewport";
 
 function formatRupees(value: unknown) {
   const numeric = typeof value === "number" ? value : Number(value);
@@ -39,6 +40,8 @@ export function SpendByCategoryChart({
   selectedCategory: string;
   onCategoryClick: (category: string) => void;
 }) {
+  const { isMobile } = useViewport();
+
   if (data.length === 0) {
     return (
       <div className="flex h-full items-center justify-center text-sm text-foreground/40">
@@ -56,9 +59,9 @@ export function SpendByCategoryChart({
             type="category"
             dataKey="category"
             interval={0}
-            angle={-20}
+            angle={isMobile ? -90 : -20}
             textAnchor="end"
-            height={48}
+            height={isMobile ? 76 : 48}
             tick={{ fill: "var(--viz-text-secondary)", fontSize: 12 }}
             axisLine={{ stroke: "var(--viz-baseline)" }}
             tickLine={false}
@@ -90,7 +93,29 @@ export function SpendByCategoryChart({
                 opacity={!selectedCategory || entry.category === selectedCategory ? 1 : 0.35}
               />
             ))}
-            <LabelList dataKey="total" position="top" formatter={formatRupees} fill="var(--viz-text-secondary)" fontSize={12} />
+            <LabelList
+              dataKey="total"
+              position="top"
+              content={(props) => {
+                if (isMobile) return <g />;
+                const x = Number(props.x ?? 0);
+                const y = Number(props.y ?? 0);
+                const width = Number(props.width ?? 0);
+                return (
+                  <g>
+                    <text
+                      x={x + width / 2}
+                      y={y - 6}
+                      textAnchor="middle"
+                      fontSize={12}
+                      fill="var(--viz-text-secondary)"
+                    >
+                      {formatRupees(props.value)}
+                    </text>
+                  </g>
+                );
+              }}
+            />
           </Bar>
         </BarChart>
       </ResponsiveContainer>
