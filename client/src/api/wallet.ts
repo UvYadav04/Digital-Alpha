@@ -1,4 +1,5 @@
 import { apiGet, apiPost } from "@/lib/api";
+import { RewardType } from "@/api/rewards";
 
 export type Wallet = {
   id: number;
@@ -9,6 +10,7 @@ export type Redemption = {
   id: number;
   reward_id: number;
   name: string;
+  type: RewardType;
   coins_spent: number;
   redeemed_at: string;
 };
@@ -17,6 +19,8 @@ export type RedeemResponse = {
   redemption: {
     id: number;
     reward_id: number;
+    name: string;
+    type: RewardType;
     coins_spent: number;
     redeemed_at: string;
   };

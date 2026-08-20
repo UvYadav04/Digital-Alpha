@@ -16,7 +16,7 @@ async def get_balance():
 
 async def list_redemptions():
     rows = await db.fetch(
-        "SELECT r.id, r.reward_id, rw.name, r.coins_spent, r.redeemed_at "
+        "SELECT r.id, r.reward_id, rw.name, rw.type, r.coins_spent, r.redeemed_at "
         "FROM redemptions r JOIN rewards rw ON rw.id = r.reward_id "
         "ORDER BY r.redeemed_at DESC"
     )
@@ -27,7 +27,7 @@ async def redeem(reward_id):
     async with db.pool.acquire() as conn:
         async with conn.transaction():
             reward = await conn.fetchrow(
-                "SELECT id, cost_in_coins FROM rewards WHERE id = $1", reward_id
+                "SELECT id, name, type, cost_in_coins FROM rewards WHERE id = $1", reward_id
             )
             if reward is None:
                 raise RewardNotFound()
@@ -52,7 +52,10 @@ async def redeem(reward_id):
                 reward["cost_in_coins"],
             )
 
-    return dict(redemption), new_balance
+    result = dict(redemption)
+    result["name"] = reward["name"]
+    result["type"] = reward["type"]
+    return result, new_balance
 
 
 async def reset():

@@ -23,9 +23,12 @@ CREATE TABLE IF NOT EXISTS wallet (
 CREATE TABLE IF NOT EXISTS rewards (
     id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
+    type TEXT NOT NULL DEFAULT 'other',
     description TEXT NOT NULL,
     cost_in_coins INTEGER NOT NULL
 );
+
+ALTER TABLE rewards ADD COLUMN IF NOT EXISTS type TEXT NOT NULL DEFAULT 'other';
 
 CREATE TABLE IF NOT EXISTS redemptions (
     id SERIAL PRIMARY KEY,

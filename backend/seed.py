@@ -9,17 +9,18 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-DATA_PATH = pathlib.Path(__file__).resolve().parent.parent / "data" / "transactions.json"
+DATA_PATH = pathlib.Path(__file__).resolve().parent / "data" / "transactions.json"
 SCHEMA_PATH = pathlib.Path(__file__).resolve().parent / "schema.sql"
 COIN_CAP = int(os.environ.get("COIN_CAP_PER_TRANSACTION", 500))
 
 REWARDS = [
-    ("₹100 Amazon Voucher", "Redeem for a ₹100 Amazon gift voucher", 1000),
-    ("₹250 Amazon Voucher", "Redeem for a ₹250 Amazon gift voucher", 2400),
-    ("5% Cashback", "5% cashback credited to your next statement", 800),
-    ("1 Month Netflix", "One month Netflix subscription", 1500),
-    ("1 Month Spotify Premium", "One month Spotify Premium subscription", 900),
-    ("₹500 Flipkart Voucher", "Redeem for a ₹500 Flipkart gift voucher", 4800),
+    ("₹100 Amazon Voucher", "voucher", "Redeem for a ₹100 Amazon gift voucher", 1000),
+    ("₹250 Amazon Voucher", "voucher", "Redeem for a ₹250 Amazon gift voucher", 2400),
+    ("₹500 Flipkart Voucher", "voucher", "Redeem for a ₹500 Flipkart gift voucher", 4800),
+    ("5% Cashback", "cashback", "5% cashback credited to your next statement", 800),
+    ("10% Cashback", "cashback", "10% cashback credited to your next statement", 1600),
+    ("1 Month Netflix", "subscription", "One month Netflix subscription", 1500),
+    ("1 Month Spotify Premium", "subscription", "One month Spotify Premium subscription", 900),
 ]
 
 
@@ -90,7 +91,7 @@ async def main():
     )
 
     await conn.executemany(
-        "INSERT INTO rewards (name, description, cost_in_coins) VALUES ($1,$2,$3)",
+        "INSERT INTO rewards (name, type, description, cost_in_coins) VALUES ($1,$2,$3,$4)",
         REWARDS,
     )
 
