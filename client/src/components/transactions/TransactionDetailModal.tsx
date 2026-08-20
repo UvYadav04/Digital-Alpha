@@ -46,12 +46,6 @@ export function TransactionDetailModal({
           </DetailRow>
           <DetailRow label="Amount">₹{transaction.amount.toLocaleString()}</DetailRow>
           <DetailRow label="Date">{formatDate(transaction.date)}</DetailRow>
-          <div className="pt-2.5">
-            <span className="text-xs font-medium text-foreground/50">Description</span>
-            <p className="mt-1 text-sm text-foreground/80">
-              {transaction.description || "No description available."}
-            </p>
-          </div>
         </div>
       )}
     </Modal>
