@@ -53,6 +53,19 @@ body {
   --rdp-today-color: var(--brand);
 }
 
+@media (max-width: 640px) {
+  .rdp-root {
+    --rdp-day-height: 30px;
+    --rdp-day-width: 30px;
+    --rdp-day_button-height: 28px;
+    --rdp-day_button-width: 28px;
+    --rdp-nav-height: 2rem;
+    --rdp-nav_button-height: 1.5rem;
+    --rdp-nav_button-width: 1.5rem;
+    font-size: 0.75rem;
+  }
+}
+
 .viz-root {
   --viz-series-1: #2a78d6;
   --viz-text-primary: #0b0b0b;

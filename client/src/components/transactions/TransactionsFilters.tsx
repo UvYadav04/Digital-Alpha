@@ -36,14 +36,12 @@ function FilterControls({
   statuses,
   onChange,
   stacked,
-  onDone,
 }: {
   filters: TransactionFilters;
   categories: string[];
   statuses: string[];
   onChange: (patch: Partial<TransactionFilters>) => void;
   stacked: boolean;
-  onDone?: () => void;
 }) {
   const controlClass = stacked ? "w-full" : "w-full sm:w-40";
 
@@ -113,19 +111,14 @@ function FilterControls({
         ))}
       </Select>
 
-      <div className={stacked ? "flex gap-2 border-t border-border pt-3" : "contents"}>
+      <div className={stacked ? "border-t border-border pt-3" : "contents"}>
         <Button
           variant="ghost"
-          className={stacked ? "flex-1" : undefined}
+          className={stacked ? "w-full" : undefined}
           onClick={() => onChange(DEFAULT_TRANSACTION_FILTERS)}
         >
           Clear filters
         </Button>
-        {stacked && onDone && (
-          <Button variant="primary" className="flex-1" onClick={onDone}>
-            Done
-          </Button>
-        )}
       </div>
     </div>
   );
@@ -192,7 +185,6 @@ export function TransactionsFilters({
           statuses={statuses}
           onChange={onChange}
           stacked
-          onDone={() => setModalOpen(false)}
         />
       </Modal>
     </div>
