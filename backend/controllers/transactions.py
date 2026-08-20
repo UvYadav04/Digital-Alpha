@@ -10,7 +10,7 @@ def build_where(category, status, date_from, date_to, amount_min, amount_max, se
         clauses.append(f"category = ${len(params)}")
     if status:
         params.append(status)
-        clauses.append(f"status = ${len(params)}")
+        clauses.append(f"LOWER(status) = LOWER(${len(params)})")
     if date_from:
         params.append(date_from)
         clauses.append(f"date >= ${len(params)}")
@@ -85,3 +85,14 @@ async def fetch_transactions(
     }
 
     return transactions_payload, summary
+
+
+async def fetch_filter_options():
+    categories = await db.fetch("SELECT DISTINCT category FROM transactions ORDER BY category")
+    statuses = await db.fetch(
+        "SELECT DISTINCT INITCAP(LOWER(status)) AS status FROM transactions ORDER BY status"
+    )
+    return {
+        "categories": [r["category"] for r in categories],
+        "statuses": [r["status"] for r in statuses],
+    }

@@ -46,3 +46,9 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+.rdp-root {
+  --rdp-accent-color: var(--brand);
+  --rdp-accent-background-color: var(--surface-muted);
+  --rdp-today-color: var(--brand);
+}

@@ -28,7 +28,7 @@ def normalize(row):
     amount = row.get("amount") or row.get("value")
     date = row.get("date") or row.get("transaction_date") or row.get("timestamp")
     category = row.get("category") or row.get("type")
-    status = row.get("status") or "success"
+    status = (row.get("status") or "success").strip().capitalize()
     description = row.get("description") or row.get("note")
     return merchant, amount, date, category, status, description
 

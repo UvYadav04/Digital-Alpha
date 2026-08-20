@@ -56,3 +56,12 @@ export type TransactionsResponse = {
 export function fetchTransactions(query: TransactionsQuery = {}) {
   return apiGet<TransactionsResponse>("/transactions", query);
 }
+
+export type TransactionFilterOptions = {
+  categories: string[];
+  statuses: string[];
+};
+
+export function fetchFilterOptions() {
+  return apiGet<TransactionFilterOptions>("/transactions/filters");
+}

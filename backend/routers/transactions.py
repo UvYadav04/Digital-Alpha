@@ -37,3 +37,8 @@ async def get_transactions(
         include_summary,
     )
     return {"transactions": rows_payload, "summary": summary}
+
+
+@router.get("/transactions/filters")
+async def get_transaction_filters():
+    return await transactions_controller.fetch_filter_options()
