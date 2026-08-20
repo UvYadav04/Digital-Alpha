@@ -16,9 +16,9 @@ const TYPE_LABEL: Record<RewardType, string> = {
 };
 
 const TYPE_TONE: Record<RewardType, BadgeTone> = {
-  voucher: "neutral",
-  cashback: "success",
-  subscription: "warning",
+  voucher: "sunsetPlum",
+  cashback: "sunsetGold",
+  subscription: "sunsetOrange",
   other: "neutral",
 };
 

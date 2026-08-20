@@ -108,7 +108,7 @@ export default function Home() {
       </section>
 
       <section className="sticky top-0 z-10 flex flex-col gap-3 bg-background py-2">
-        <h2 className="text-sm font-medium text-foreground/70">Transactions</h2>
+        {/* <h2 className="text-sm font-medium text-foreground/70">Transactions</h2> */}
 
         {isError && (
           <p className="text-sm text-red-500">

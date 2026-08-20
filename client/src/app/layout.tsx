@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Digital Alpha",
+  title: "Tablytics",
   description: "Credit card bills, rewards, and spend analytics",
 };
 

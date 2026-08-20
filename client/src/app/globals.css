@@ -1,13 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --surface: #ffffff;
-  --surface-muted: #f5f5f5;
-  --border: #e5e5e5;
-  --brand: #4f46e5;
+  /* Sunset theme: warm off-white surfaces + a burnt-orange brand accent. */
+  --background: #fdf6f2;
+  --foreground: #241b15;
+  --surface: #fffdfb;
+  --surface-muted: #f5e6db;
+  --border: #ecd8c8;
+  --brand: #c1440e;
   --brand-foreground: #ffffff;
+
+  /* Sunset accent ramp — used for reward-type badges and other categorical accents. */
+  --sunset-orange: #c1440e;
+  --sunset-gold: #c9971a;
+  --sunset-plum: #9c3f77;
 }
 
 @theme inline {
@@ -18,17 +24,26 @@
   --color-border: var(--border);
   --color-brand: var(--brand);
   --color-brand-foreground: var(--brand-foreground);
+  --color-sunset-orange: var(--sunset-orange);
+  --color-sunset-gold: var(--sunset-gold);
+  --color-sunset-plum: var(--sunset-plum);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-    --surface: #111111;
-    --surface-muted: #1a1a1a;
-    --border: #262626;
+    --background: #140d0a;
+    --foreground: #f5e9df;
+    --surface: #1c1410;
+    --surface-muted: #241a14;
+    --border: #3a291f;
+    --brand: #c74a1a;
+    --brand-foreground: #ffffff;
+
+    --sunset-orange: #c74a1a;
+    --sunset-gold: #ae8c2e;
+    --sunset-plum: #a25a9a;
   }
 }
 
@@ -67,29 +82,21 @@ body {
 }
 
 .viz-root {
-  --viz-series-1: #2a78d6;
-  --viz-text-primary: #0b0b0b;
-  --viz-text-secondary: #52514e;
-  --viz-muted: #898781;
-  --viz-gridline: #e1e0d9;
-  --viz-baseline: #c3c2b7;
-  --viz-status-success: #1f8f4e;
-  --viz-status-warning: #d9a406;
-  --viz-status-danger: #c0293f;
-  --viz-status-neutral: #6a5acd;
+  --viz-series-1: #c1440e;
+  --viz-text-primary: #241b15;
+  --viz-text-secondary: #6b5a4d;
+  --viz-muted: #9c8a7c;
+  --viz-gridline: #ecd8c8;
+  --viz-baseline: #d8c0ac;
 }
 
 @media (prefers-color-scheme: dark) {
   .viz-root {
-    --viz-series-1: #3987e5;
-    --viz-text-primary: #ffffff;
-    --viz-text-secondary: #c3c2b7;
-    --viz-muted: #898781;
-    --viz-gridline: #2c2c2a;
-    --viz-baseline: #383835;
-    --viz-status-success: #26965f;
-    --viz-status-warning: #b8891c;
-    --viz-status-danger: #cf5064;
-    --viz-status-neutral: #7568c4;
+    --viz-series-1: #e0682a;
+    --viz-text-primary: #f5e9df;
+    --viz-text-secondary: #d8c0ac;
+    --viz-muted: #9c8a7c;
+    --viz-gridline: #3a291f;
+    --viz-baseline: #4a362a;
   }
 }
