@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { DateRange, DayPicker } from "react-day-picker";
 import "react-day-picker/style.css";
 
@@ -16,8 +17,20 @@ export function DateRangeFilter({
   dateTo: string;
   onChange: (patch: { date_from: string; date_to: string }) => void;
 }) {
+  const [localFrom, setLocalFrom] = useState(dateFrom);
+  const [localTo, setLocalTo] = useState(dateTo);
+  const [syncedFrom, setSyncedFrom] = useState(dateFrom);
+  const [syncedTo, setSyncedTo] = useState(dateTo);
+
+  if (dateFrom !== syncedFrom || dateTo !== syncedTo) {
+    setSyncedFrom(dateFrom);
+    setSyncedTo(dateTo);
+    setLocalFrom(dateFrom);
+    setLocalTo(dateTo);
+  }
+
   const selected: DateRange | undefined =
-    dateFrom || dateTo ? { from: parseIsoDate(dateFrom), to: parseIsoDate(dateTo) } : undefined;
+    localFrom || localTo ? { from: parseIsoDate(localFrom), to: parseIsoDate(localTo) } : undefined;
 
   const label =
     dateFrom || dateTo
@@ -30,20 +43,31 @@ export function DateRangeFilter({
         <div className="flex flex-col gap-2">
           <DayPicker
             mode="range"
-            numberOfMonths={2}
+            numberOfMonths={1}
             selected={selected}
-            onSelect={(range) =>
-              onChange({
-                date_from: range?.from ? toIsoDate(range.from) : "",
-                date_to: range?.to ? toIsoDate(range.to) : "",
-              })
-            }
+            onSelect={(range) => {
+              setLocalFrom(range?.from ? toIsoDate(range.from) : "");
+              setLocalTo(range?.to ? toIsoDate(range.to) : "");
+            }}
           />
           <div className="flex justify-end gap-2 border-t border-border pt-2">
-            <Button variant="ghost" onClick={() => onChange({ date_from: "", date_to: "" })}>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setLocalFrom("");
+                setLocalTo("");
+                onChange({ date_from: "", date_to: "" });
+              }}
+            >
               Clear
             </Button>
-            <Button variant="primary" onClick={close}>
+            <Button
+              variant="primary"
+              onClick={() => {
+                onChange({ date_from: localFrom, date_to: localTo });
+                close();
+              }}
+            >
               Done
             </Button>
           </div>

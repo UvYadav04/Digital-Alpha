@@ -14,3 +14,18 @@ export function formatShortDate(value: string) {
   if (!date) return "";
   return date.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
 }
+
+export function formatMonthLabel(month: string) {
+  const date = new Date(`${month}-01T00:00:00`);
+  if (Number.isNaN(date.getTime())) return month;
+  return date.toLocaleDateString("en-IN", { month: "short", year: "numeric" });
+}
+
+export function monthBounds(month: string) {
+  const [year, mon] = month.split("-").map(Number);
+  if (!year || !mon) return { from: "", to: "" };
+  const from = `${month}-01`;
+  const lastDay = new Date(year, mon, 0).getDate();
+  const to = `${month}-${String(lastDay).padStart(2, "0")}`;
+  return { from, to };
+}

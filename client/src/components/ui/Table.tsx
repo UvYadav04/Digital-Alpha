@@ -7,7 +7,7 @@ export function Table({ children }: { children: React.ReactNode }) {
 }
 
 export function TableHead({ children }: { children: React.ReactNode }) {
-  return <thead className="sticky top-0 z-10 bg-surface-muted">{children}</thead>;
+  return <thead className="sticky top-[60px] z-10 bg-surface-muted">{children}</thead>;
 }
 
 export function TableBody({ children }: { children: React.ReactNode }) {

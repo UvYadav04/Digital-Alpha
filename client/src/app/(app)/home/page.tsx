@@ -2,47 +2,109 @@
 
 import { useState } from "react";
 
+import { ChartCarousel } from "@/components/charts/ChartCarousel";
+import { MonthlyTrendChart } from "@/components/charts/MonthlyTrendChart";
+import { SpendByCategoryChart } from "@/components/charts/SpendByCategoryChart";
+import { LoadingOverlay } from "@/components/ui/LoadingOverlay";
 import { Pagination } from "@/components/ui/Pagination";
 import { TransactionsFilters } from "@/components/transactions/TransactionsFilters";
 import { TransactionsTable } from "@/components/transactions/TransactionsTable";
+import { monthBounds } from "@/lib/date";
 import { useDebouncedValue } from "@/lib/hooks/useDebouncedValue";
 import { useTransactions } from "@/lib/hooks/useTransactions";
+import { useTransactionsSummary } from "@/lib/hooks/useTransactionsSummary";
 import { DEFAULT_TRANSACTION_FILTERS, TransactionFilters } from "@/lib/transactionFilters";
 
 const PAGE_SIZE = 20;
+const FILTER_DEBOUNCE_MS = 1000;
 
 export default function Home() {
   const [filters, setFilters] = useState<TransactionFilters>(DEFAULT_TRANSACTION_FILTERS);
   const [page, setPage] = useState(1);
 
-  const debouncedSearch = useDebouncedValue(filters.search, 300);
+  const debouncedFilters = useDebouncedValue(filters, FILTER_DEBOUNCE_MS);
 
   const handleFiltersChange = (patch: Partial<TransactionFilters>) => {
     setFilters((prev) => ({ ...prev, ...patch }));
     setPage(1);
   };
 
-  const { data, isLoading, isError, error } = useTransactions({
+  const sharedFilters = {
+    sort_by: debouncedFilters.sort_by,
+    sort_dir: debouncedFilters.sort_dir,
+    date_from: debouncedFilters.date_from || undefined,
+    date_to: debouncedFilters.date_to || undefined,
+    amount_min: debouncedFilters.amount_min ? Number(debouncedFilters.amount_min) : undefined,
+    amount_max: debouncedFilters.amount_max ? Number(debouncedFilters.amount_max) : undefined,
+    search: debouncedFilters.search || undefined,
+  };
+
+  // Chart summaries stay independent of the category / status filters so that
+  // clicking a chart segment narrows the table without collapsing the chart itself.
+  const {
+    data,
+    isFetching: isTableFetching,
+    isError,
+    error,
+  } = useTransactions({
+    ...sharedFilters,
+    category: debouncedFilters.category || undefined,
+    status: debouncedFilters.status || undefined,
     page,
     limit: PAGE_SIZE,
-    sort_by: filters.sort_by,
-    sort_dir: filters.sort_dir,
-    category: filters.category || undefined,
-    status: filters.status || undefined,
-    date_from: filters.date_from || undefined,
-    date_to: filters.date_to || undefined,
-    amount_min: filters.amount_min ? Number(filters.amount_min) : undefined,
-    amount_max: filters.amount_max ? Number(filters.amount_max) : undefined,
-    search: debouncedSearch || undefined,
   });
 
+  const { data: summary, isFetching: isSummaryFetching } = useTransactionsSummary(sharedFilters);
+
+  const isUpdating = isTableFetching || isSummaryFetching;
+
+  const selectedMonth = (() => {
+    if (!filters.date_from || !filters.date_to) return "";
+    const month = filters.date_from.slice(0, 7);
+    const bounds = monthBounds(month);
+    return bounds.from === filters.date_from && bounds.to === filters.date_to ? month : "";
+  })();
+
+  const handleMonthClick = (month: string) => {
+    if (!month) {
+      handleFiltersChange({ date_from: "", date_to: "" });
+      return;
+    }
+    const bounds = monthBounds(month);
+    handleFiltersChange({ date_from: bounds.from, date_to: bounds.to });
+  };
+
   return (
-    <div className="flex flex-col gap-4 p-4 md:p-6">
-      <section className="h-72 rounded-xl border border-border bg-surface p-4 md:h-80">
-        <h2 className="text-sm font-medium text-foreground/70">Spend by category</h2>
-        <div className="flex h-[calc(100%-1.5rem)] items-center justify-center text-sm text-foreground/40">
-          Chart goes here
-        </div>
+    <div className="relative flex flex-col gap-4 p-4 md:p-6">
+      <LoadingOverlay show={isUpdating} />
+
+      <section className="h-[274px] rounded-xl border border-border bg-surface p-4 md:h-[304px]">
+        <ChartCarousel
+          slides={[
+            {
+              key: "category",
+              title: "Spend by category",
+              content: summary && (
+                <SpendByCategoryChart
+                  data={summary.by_category}
+                  selectedCategory={filters.category}
+                  onCategoryClick={(category) => handleFiltersChange({ category })}
+                />
+              ),
+            },
+            {
+              key: "trend",
+              title: "Monthly spend trend",
+              content: summary && (
+                <MonthlyTrendChart
+                  data={summary.by_month}
+                  selectedMonth={selectedMonth}
+                  onMonthClick={handleMonthClick}
+                />
+              ),
+            },
+          ]}
+        />
       </section>
 
       <section className="flex flex-col gap-3">
@@ -50,12 +112,12 @@ export default function Home() {
 
         <TransactionsFilters filters={filters} onChange={handleFiltersChange} />
 
-        {isLoading && <p className="text-sm text-foreground/40">Loading…</p>}
         {isError && (
           <p className="text-sm text-red-500">
             Failed to load transactions: {error instanceof Error ? error.message : "unknown error"}
           </p>
         )}
+
         {data && <TransactionsTable rows={data.transactions.rows} />}
 
         {data && (

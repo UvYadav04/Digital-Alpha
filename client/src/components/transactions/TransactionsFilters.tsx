@@ -26,7 +26,7 @@ export function TransactionsFilters({
   const statuses = options ? dedupeCaseInsensitive(options.statuses) : [];
 
   return (
-    <div className="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-surface p-3">
+    <div className="sticky top-0 z-20 flex flex-wrap items-center gap-2 rounded-xl border border-border bg-surface p-3">
       <Input
         type="text"
         placeholder="Search merchant"

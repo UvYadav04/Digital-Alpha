@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import { Button } from "@/components/ui/Button";
 import { FilterPopover } from "@/components/ui/FilterPopover";
 import { Input } from "@/components/ui/Input";
@@ -13,6 +15,18 @@ export function AmountRangeFilter({
   amountMax: string;
   onChange: (patch: { amount_min: string; amount_max: string }) => void;
 }) {
+  const [localMin, setLocalMin] = useState(amountMin);
+  const [localMax, setLocalMax] = useState(amountMax);
+  const [syncedMin, setSyncedMin] = useState(amountMin);
+  const [syncedMax, setSyncedMax] = useState(amountMax);
+
+  if (amountMin !== syncedMin || amountMax !== syncedMax) {
+    setSyncedMin(amountMin);
+    setSyncedMax(amountMax);
+    setLocalMin(amountMin);
+    setLocalMax(amountMax);
+  }
+
   const label =
     amountMin || amountMax
       ? `₹${amountMin || "0"} – ₹${amountMax || "any"}`
@@ -27,8 +41,8 @@ export function AmountRangeFilter({
               type="number"
               inputMode="numeric"
               placeholder="Min"
-              value={amountMin}
-              onChange={(e) => onChange({ amount_min: e.target.value, amount_max: amountMax })}
+              value={localMin}
+              onChange={(e) => setLocalMin(e.target.value)}
               className="w-24"
             />
             <span className="text-foreground/40">–</span>
@@ -36,16 +50,29 @@ export function AmountRangeFilter({
               type="number"
               inputMode="numeric"
               placeholder="Max"
-              value={amountMax}
-              onChange={(e) => onChange({ amount_min: amountMin, amount_max: e.target.value })}
+              value={localMax}
+              onChange={(e) => setLocalMax(e.target.value)}
               className="w-24"
             />
           </div>
           <div className="flex justify-end gap-2 border-t border-border pt-2">
-            <Button variant="ghost" onClick={() => onChange({ amount_min: "", amount_max: "" })}>
+            <Button
+              variant="ghost"
+              onClick={() => {
+                setLocalMin("");
+                setLocalMax("");
+                onChange({ amount_min: "", amount_max: "" });
+              }}
+            >
               Clear
             </Button>
-            <Button variant="primary" onClick={close}>
+            <Button
+              variant="primary"
+              onClick={() => {
+                onChange({ amount_min: localMin, amount_max: localMax });
+                close();
+              }}
+            >
               Done
             </Button>
           </div>

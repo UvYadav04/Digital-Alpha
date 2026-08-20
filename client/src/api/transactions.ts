@@ -43,9 +43,15 @@ export type MonthSummary = {
   total: number;
 };
 
+export type StatusSummary = {
+  status: string;
+  count: number;
+};
+
 export type TransactionsSummary = {
   by_category: CategorySummary[];
   by_month: MonthSummary[];
+  by_status: StatusSummary[];
 } | null;
 
 export type TransactionsResponse = {

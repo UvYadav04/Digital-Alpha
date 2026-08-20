@@ -72,9 +72,15 @@ async def fetch_transactions(
             f"GROUP BY month ORDER BY month",
             *params,
         )
+        by_status = await db.fetch(
+            f"SELECT INITCAP(LOWER(status)) AS status, COUNT(*) AS count FROM transactions {where_sql} "
+            f"GROUP BY INITCAP(LOWER(status)) ORDER BY count DESC",
+            *params,
+        )
         summary = {
             "by_category": [dict(r) for r in by_category],
             "by_month": [dict(r) for r in by_month],
+            "by_status": [dict(r) for r in by_status],
         }
 
     transactions_payload = {

@@ -7,7 +7,7 @@ export async function apiGet<T>(path: string, params?: Record<string, string | n
       if (value !== undefined) url.searchParams.set(key, String(value));
     }
   }
-  const res = await fetch(url.toString());
+  const res = await fetch(url.toString(), { cache: "no-store" });
   if (!res.ok) throw new Error(`GET ${path} failed with ${res.status}`);
   return res.json() as Promise<T>;
 }
@@ -18,6 +18,7 @@ export async function apiPost<T>(path: string, body: unknown) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
+    cache: "no-store",
   });
   if (!res.ok) {
     const detail = await res.json().catch(() => null);
