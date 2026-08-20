@@ -11,7 +11,6 @@ import { TransactionsFilters } from "@/components/transactions/TransactionsFilte
 import { TransactionsTable } from "@/components/transactions/TransactionsTable";
 import { monthBounds } from "@/lib/date";
 import { useDebouncedValue } from "@/lib/hooks/useDebouncedValue";
-import { useElementSize } from "@/lib/hooks/useElementSize";
 import { useTransactions } from "@/lib/hooks/useTransactions";
 import { useTransactionsSummary } from "@/lib/hooks/useTransactionsSummary";
 import { DEFAULT_TRANSACTION_FILTERS, TransactionFilters } from "@/lib/transactionFilters";
@@ -22,7 +21,6 @@ const FILTER_DEBOUNCE_MS = 1000;
 export default function Home() {
   const [filters, setFilters] = useState<TransactionFilters>(DEFAULT_TRANSACTION_FILTERS);
   const [page, setPage] = useState(1);
-  const { ref: filtersRef, size: filtersSize } = useElementSize<HTMLDivElement>();
 
   const debouncedFilters = useDebouncedValue(filters, FILTER_DEBOUNCE_MS);
 
@@ -77,10 +75,10 @@ export default function Home() {
   };
 
   return (
-    <div className="relative flex flex-col gap-4 p-4 md:p-6">
+    <div className="relative flex flex-col gap-4 px-4 pb-4 md:px-6 md:pb-6">
       <LoadingOverlay show={isUpdating} />
 
-      <section className="h-[274px] rounded-xl border border-border bg-surface p-4 md:h-[304px]">
+      <section className="mt-4 h-[274px] rounded-xl border border-border bg-surface p-4 md:mt-6 md:h-[304px]">
         <ChartCarousel
           slides={[
             {
@@ -109,12 +107,8 @@ export default function Home() {
         />
       </section>
 
-      <section className="flex flex-col gap-3">
+      <section className="sticky top-0 z-10 flex flex-col gap-3 bg-background py-2">
         <h2 className="text-sm font-medium text-foreground/70">Transactions</h2>
-
-        <div ref={filtersRef}>
-          <TransactionsFilters filters={filters} onChange={handleFiltersChange} />
-        </div>
 
         {isError && (
           <p className="text-sm text-red-500">
@@ -122,9 +116,9 @@ export default function Home() {
           </p>
         )}
 
-        {data && (
-          <TransactionsTable rows={data.transactions.rows} stickyOffset={filtersSize.height || 60} />
-        )}
+        <TransactionsFilters filters={filters} onChange={handleFiltersChange} />
+
+        {data && <TransactionsTable rows={data.transactions.rows} />}
 
         {data && (
           <Pagination

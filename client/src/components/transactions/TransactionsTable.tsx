@@ -15,13 +15,7 @@ function statusTone(status: string): BadgeTone {
   return "neutral";
 }
 
-export function TransactionsTable({
-  rows,
-  stickyOffset,
-}: {
-  rows: Transaction[];
-  stickyOffset?: number;
-}) {
+export function TransactionsTable({ rows }: { rows: Transaction[] }) {
   const [selected, setSelected] = useState<Transaction | null>(null);
 
   if (rows.length === 0) {
@@ -35,7 +29,7 @@ export function TransactionsTable({
   return (
     <>
       <Table>
-        <TableHead stickyOffset={stickyOffset}>
+        <TableHead>
           <TableRow>
             <TableHeaderCell>Merchant</TableHeaderCell>
             <TableHeaderCell>Category</TableHeaderCell>

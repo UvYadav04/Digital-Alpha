@@ -146,7 +146,7 @@ export function TransactionsFilters({
 
   if (isWeb) {
     return (
-      <div className="sticky top-0 z-20 rounded-xl border border-border bg-surface p-3">
+      <div className="rounded-xl border border-border bg-surface p-3">
         <FilterControls
           filters={filters}
           categories={categories}
@@ -161,7 +161,7 @@ export function TransactionsFilters({
   const activeCount = activeFilterCount(filters);
 
   return (
-    <div className="sticky top-0 z-20 rounded-xl border border-border bg-surface p-3">
+    <div className="py-2">
       <Button
         variant={activeCount > 0 ? "primary" : "secondary"}
         className="w-fit"

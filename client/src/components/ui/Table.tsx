@@ -1,23 +1,13 @@
 export function Table({ children }: { children: React.ReactNode }) {
   return (
-    <div className="w-full overflow-x-auto rounded-lg border border-border md:overflow-visible">
-      <table className="w-full min-w-[640px] border-collapse text-xs sm:text-sm md:min-w-0">{children}</table>
+    <div className="scrollbar-hide max-h-[420px] w-full overflow-auto rounded-lg border border-border sm:max-h-[520px]">
+      <table className="w-full min-w-[640px] border-collapse text-xs sm:min-w-0 sm:text-sm">{children}</table>
     </div>
   );
 }
 
-export function TableHead({
-  children,
-  stickyOffset = 60,
-}: {
-  children: React.ReactNode;
-  stickyOffset?: number;
-}) {
-  return (
-    <thead className="sticky z-10 bg-surface-muted" style={{ top: stickyOffset }}>
-      {children}
-    </thead>
-  );
+export function TableHead({ children }: { children: React.ReactNode }) {
+  return <thead className="sticky top-0 z-10 bg-surface-muted">{children}</thead>;
 }
 
 export function TableBody({ children }: { children: React.ReactNode }) {

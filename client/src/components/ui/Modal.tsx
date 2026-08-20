@@ -39,7 +39,7 @@ export function Modal({
       role="presentation"
     >
       <div
-        className="max-h-[85vh] w-full max-w-md overflow-y-auto rounded-xl border border-border bg-surface p-4 shadow-xl sm:p-5"
+        className="scrollbar-hide max-h-[85vh] w-full max-w-md overflow-y-auto rounded-xl border border-border bg-surface p-4 shadow-xl sm:p-5"
         onClick={(e) => e.stopPropagation()}
         role="dialog"
         aria-modal="true"
