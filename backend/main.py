@@ -22,7 +22,7 @@ app = FastAPI(lifespan=lifespan)
 
 ALLOWED_ORIGINS = [
     origin.strip()
-    for origin in os.environ.get("ALLOWED_ORIGINS", "https://digital-alpha-1.onrender.com'").split(",")
+    for origin in os.environ.get("ALLOWED_ORIGINS", "https://digital-alpha-1.onrender.com").split(",")
     if origin.strip()
 ]
 
